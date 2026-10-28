@@ -1,0 +1,13 @@
+{
+  "datos_originales_incluidos": false,
+  "documentos_finales_previos_incluidos": false,
+  "modelos_jflap": 8,
+  "pruebas_ejecutadas": true,
+  "estructura": [
+    "automatas",
+    "datos",
+    "informe",
+    "monitor",
+    "tablas"
+  ]
+}

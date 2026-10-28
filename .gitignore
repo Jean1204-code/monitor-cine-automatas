@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+datos/local/
+datos/originales/
+datos/privados/
+datos/*.csv
+datos/**/*.csv
+**/clave_prueba.csv
+**/clave_validacion.csv
+# Detecciones pueden revelar cadenas de operaciones; conservar localmente.
+tablas/resultados/detecciones*.csv
+.DS_Store

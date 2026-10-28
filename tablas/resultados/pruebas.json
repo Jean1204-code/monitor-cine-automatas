@@ -1,0 +1,7 @@
+{
+  "exhaustivas": 4681,
+  "aleatorias": 1000,
+  "equivalencia": true,
+  "estados_afd": 41,
+  "estados_minimo": 6
+}
