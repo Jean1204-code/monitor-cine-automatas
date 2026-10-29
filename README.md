@@ -1,41 +1,75 @@
 # Monitor de resultados de compra de boletos de cine
-UNL · Teoría de Autómatas y Computabilidad Avanzada.
-Integrantes, roles y usuarios de GitHub: COMPLETAR.
 
-## Alcance
-Reconoce PPP, PPS o BBP después de ignorar V. Aceptar=patrón de seguimiento, no fraude ni compra autorizada. Alfabeto S,T,F,B,L,P,V,R. Caso=cliente-año. Procedencia original y permiso de datos no certificados: consultar datos/FUENTES.md.
+Proyecto de la Evaluación Sumativa 1 (Unidad 1) de **Teoría de Autómatas y Computabilidad Avanzada**, Universidad Nacional de Loja.
+Docente: Ing. Genoveva Suing Albito.
+
+## Integrantes
+
+| Integrante | Rol | GitHub |
+|---|---|---|
+| Jossibel Pérez | Documentadora (informe y presentación) | Jossibel |
+| David Toledo | Responsable del modelo formal (AFND, AFD y JFLAP) | |
+| Isauro Rivera | Responsable de datos y pruebas | |
+| Jean Encalada | Desarrollador del monitor | Jean1204-code |
+
+## Qué hace
+
+Cada operación de compra de un boleto termina con un resultado (orden exitosa, pago fallido desde el banco, sin respuesta del banco, etc.). Agrupamos las operaciones de cada cliente por año, las convertimos en una cadena y el monitor busca tres patrones:
+
+| Patrón | Qué indica |
+|---|---|
+| PPP | Tres pagos fallidos desde el banco seguidos |
+| PPS | Una compra exitosa justo después de dos fallos |
+| BBP | Dos faltas de respuesta del banco seguidas de un fallo |
+
+V (verificar cuenta) es el evento irrelevante: se ignora antes de buscar los patrones. Una alerta es un caso para revisar, no un fraude confirmado.
+
+Alfabeto (sale de `status_detail.csv`): S orden exitosa · T pago vencido · F fondos insuficientes · B sin respuesta del banco · L contraseña bloqueada · P pago fallido desde el banco · V verificar cuenta · R transacción limitada.
 
 ## Carpetas
-- automatas/: JFLAP y modelos JSON; incluye AFD mínimo reorganizado.
-- datos/: preparación y documentación; datos reales solo locales.
-- informe/: instrucciones para añadir los documentos finales ya entregados anteriormente.
-- monitor/: construcciones, ejecución, pruebas y rendimiento.
-- tablas/: transiciones, subconjuntos, particiones y resultados agregados.
 
-## Instalación (desde la raíz del proyecto)
-Python 3.10+.
+- `datos/`: `preparar_datos.py` (limpieza, casos cliente-año, muestreo con semilla 2026), `FUENTES.md` y los archivos `validacion.csv` y `prueba.csv`.
+- `automatas/`: los autómatas en JFLAP (`.jff`) y en JSON: AFND de cada patrón, unión con ε, AFND sin ε, AFD y AFD mínimo.
+- `monitor/`: `automata.py` (construcciones y simuladores), `construir_modelos.py`, `monitor.py`, `verificar.py` y `benchmark.py`.
+- `tablas/`: tablas de transiciones, subconjuntos, refinamiento y resultados.
+- `interfaz/`: interfaz web hecha con Streamlit para cargar un CSV y ver las alertas.
+- `informe/`: informe técnico en PDF y Word.
+
+## Cómo ejecutarlo
+
+Necesita Python 3.10 o superior, pandas y (para la interfaz) Streamlit.
+
 ```
 pip install -r requirements.txt
 python monitor/construir_modelos.py
 python monitor/verificar.py
+python monitor/monitor.py datos/validacion.csv --clave datos/clave_validacion.csv --salida tablas/resultados/detecciones_validacion.csv
+python monitor/monitor.py datos/prueba.csv --salida tablas/resultados/detecciones_prueba.csv
 ```
 
-## Preparación de datos locales
-Obtener el CSV de la fuente; no está incluido en el repositorio.
+Para abrir la interfaz web:
+
+```
+streamlit run interfaz/app.py
+```
+
+Para regenerar los datos desde la fuente original:
+
 ```
 python datos/preparar_datos.py /ruta/ticket_history.csv datos/local
-python monitor/monitor.py datos/local/validacion.csv --clave datos/local/clave_validacion.csv --salida tablas/resultados/detecciones_validacion.csv
-python monitor/monitor.py datos/local/prueba.csv --salida tablas/resultados/detecciones_prueba.csv
 ```
-Evaluación posterior de prueba:
-```
-python monitor/monitor.py datos/local/prueba.csv --clave datos/local/clave_prueba.csv --salida tablas/resultados/detecciones_prueba.csv
-python monitor/benchmark.py datos/local/clave_validacion.csv datos/local/clave_prueba.csv
-```
-El monitor no usa etiquetas para detectar. Las claves no deben entregarse junto al archivo de prueba ciega. No subir CSV con información operacional sin revisar permisos. .gitignore no protege una selección manual de archivos en la web.
 
-## JFLAP
-Abrir automatas/04_afd_minimo_reorganizado.jff para el diseño separado. El generador ahora conserva también esta versión. Capturas y comprobación gráfica pendientes del equipo. La equivalencia programática no se presenta como ejecución JFLAP.
+La clave de la prueba se entrega por separado; el monitor no usa etiquetas para detectar.
 
-## Participación
-Código base asistido por IA. Registrar revisión, pruebas y mejoras auténticas desde cada cuenta; no inventar aportes ni commits. Consultar REPARTO_COMMITS.md. Los documentos finales anteriores deben incorporarse a informe/; no están recuperados en esta versión.
+## Resultados
+
+| Conjunto | VP | FP | FN | VN | Precisión | Exhaustividad |
+|---|---|---|---|---|---|---|
+| Validación (300) | 54 | 0 | 0 | 246 | 1,000 | 1,000 |
+| Prueba (50) | 9 | 0 | 0 | 41 | 1,000 | 1,000 |
+
+El AFD de la construcción de subconjuntos tiene 41 estados y el mínimo 6.
+
+## Uso de IA
+
+Parte del código base se hizo con apoyo de herramientas de IA (Perplexity y Claude). El equipo lo revisó, lo ejecutó y puede explicar cada parte.

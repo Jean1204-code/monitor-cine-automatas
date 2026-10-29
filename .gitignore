@@ -5,11 +5,6 @@ __pycache__/
 .env.*
 datos/local/
 datos/originales/
-datos/privados/
-datos/*.csv
-datos/**/*.csv
+# La clave de la prueba se entrega aparte, no va en el repositorio
 **/clave_prueba.csv
-**/clave_validacion.csv
-# Detecciones pueden revelar cadenas de operaciones; conservar localmente.
-tablas/resultados/detecciones*.csv
 .DS_Store
