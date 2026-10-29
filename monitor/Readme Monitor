@@ -1,0 +1,6 @@
+Python con pandas ≥2.0. automata.py implementa clausura ε, simulación AFND, eliminación de ε, subconjuntos, refinamiento de particiones, 
+simulación AFD y equivalencia por producto. monitor.py carga el AFD mínimo JSON, no las reglas de búsqueda usadas para etiquetar.
+Ejecución: python monitor/monitor.py datos/validacion.csv --clave datos/clave_validacion.csv --salida detecciones.csv. Para prueba ciega omitir --clave; 
+agregarla solo al evaluar. Dependencias: pip install -r requirements.txt. Ver README para todos los comandos.
+Procesamiento: comprobar columnas y campos obligatorios; detectar id_evento duplicados; interpretar fecha_hora; ordenar cada id_sesion; formar w; iniciar en m1; 
+aplicar una transición por símbolo; clasificar por pertenencia a F. Se reinicia el estado entre casos, evitando contaminación.
